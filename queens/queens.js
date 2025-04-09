@@ -1,4 +1,6 @@
-function findCells(){
+readQueens();
+
+function readQueens() {
     const queensGrid = document.querySelector('#queens-grid');
 
     if (queensGrid) {
@@ -23,7 +25,7 @@ function findCells(){
                 cells.push(cell);
             }
         })
-        console.log("cells: "  + cells);
+        return cells;
     } 
 }
 
@@ -88,4 +90,5 @@ function getColor(text) {
     return -1;
 }
 
-module.exports = { isEmpty, isCross, isQueen, getColumn, getRow, getColor, findCells };
+
+module.exports = { isEmpty, isCross, isQueen, getColumn, getRow, getColor };

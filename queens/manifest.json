@@ -3,13 +3,12 @@
     "name": "Queens",
     "version": "1.0",
     "description": "Queens solver",
-  
     "icons": {
 
     },
     "content_scripts": [
       {
-        "js": ["index.js", "queens.js"],
+        "js": ["queens.js"],
         "matches": ["<all_urls>"]
       }
     ]

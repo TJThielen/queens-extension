@@ -1,4 +1,4 @@
-const { isEmpty, isCross, isQueen, getColumn, getRow, getColor } = require('.');
+const { isEmpty, isCross, isQueen, getColumn, getRow, getColor } = require('./queens.js');
 
 describe('isEmpty function', () => {
   test('should return true if text contains "Empty"', () => {
@@ -33,6 +33,23 @@ describe('isCross function', () => {
       const result = isCross('');
       expect(result).toBe(false);
     });
+});
+
+describe('isQueen function', () => {
+  test('should return true if text contains "Queen"', () => {
+    const result = isQueen('Queen of color Lavender, row 1, column 6');
+    expect(result).toBe(true);
+  });
+
+  test('should return false if text does not contain "Queen"', () => {
+    const result = isQueen('nothing to see here');
+    expect(result).toBe(false);
+  });
+
+  test('should return false if text is an empty string', () => {
+    const result = isQueen('');
+    expect(result).toBe(false);
+  });
 });
 
 describe('getRow function', () => {
@@ -84,4 +101,16 @@ describe('getColor function', () => {
       const result = getColor('nothing here');
       expect(result).toBe(-1);
     });
+});
+
+describe('findQueens function', () => {
+  test('should return Lavender if text contains "color Lavender"', () => {
+    const result = getColor('Queen of color Lavender, row 1, column 1');
+    expect(result).toBe("Lavender");
+  });
+
+  test('should return -1 if text does not contain "color <str>"', () => {
+    const result = getColor('nothing here');
+    expect(result).toBe(-1);
+  });
 });

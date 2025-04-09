@@ -1,0 +1,3 @@
+const { findCells } = require('.');
+
+findCells();

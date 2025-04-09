@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Tango Solver",
+  "version": "1.0",
+  "description": "Solves Tangos for ya",
+  "icons": {
+    "128": "/images/tango.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "128": "/images/tango.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.linkedin.com/games/*"],
+      "js": ["index.js", "tango.js"],
+      "css": ["css/style.css"],
+      "run_at": "document_end"
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}

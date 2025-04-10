@@ -7,12 +7,15 @@
  */
 function $(query) {
     // check for iframe.
-    const body = document.querySelector('iframe')?.contentWindow?.document?.body || document;
-
-    const results = body.querySelectorAll(query);
+    const results = document.querySelectorAll(query);
 
     if (!results.length) {
-        return null;
+        // check for iframe ability
+        try {
+            return document.querySelector('iframe')?.contentWindow?.document?.body?.querySelectorAll(query);
+        } catch (_e) {
+            return null;
+        }
     }
 
     if (results.length === 1) {
@@ -43,18 +46,20 @@ function $create({ element, id, classList }) {
 
 // Ready us up by adding a "Solve" button
 window.onload = systemStart;
+const tangoURL = '/games/tango/';
 
 async function systemStart() {
-    console.log('LOAD EXTENSION', document);
+    let url = window.location.href;
     let controlsContainer = $('.aux-controls-wrapper');
 
-    if (!controlsContainer) {
+    if (!controlsContainer || !url.includes(tangoURL)) {
         await new Promise((resolve) => {
             let controlsCheckInterval = null;
             function findControls() {
                 controlsContainer = $('.aux-controls-wrapper');
+                url = window.location.href;
 
-                if (controlsContainer) {
+                if (controlsContainer && url.includes(tangoURL)) {
                     clearInterval(controlsCheckInterval);
                     resolve();
                 }

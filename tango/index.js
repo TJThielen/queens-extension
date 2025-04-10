@@ -6,7 +6,10 @@
  * @returns {Node | Node[] | null}
  */
 function $(query) {
-    const results = document.querySelectorAll(query);
+    // check for iframe.
+    const body = document.querySelector('iframe')?.contentWindow?.document?.body || document;
+
+    const results = body.querySelectorAll(query);
 
     if (!results.length) {
         return null;
@@ -39,14 +42,26 @@ function $create({ element, id, classList }) {
 }
 
 // Ready us up by adding a "Solve" button
-window.onload = function () {
-    console.log('LOAD EXTENSION');
-    const controlsContainer = $('.aux-controls-wrapper');
+window.onload = systemStart;
 
-    console.log(controlsContainer);
+async function systemStart() {
+    console.log('LOAD EXTENSION', document);
+    let controlsContainer = $('.aux-controls-wrapper');
+
     if (!controlsContainer) {
-        // Screwed
-        return;
+        await new Promise((resolve) => {
+            let controlsCheckInterval = null;
+            function findControls() {
+                controlsContainer = $('.aux-controls-wrapper');
+
+                if (controlsContainer) {
+                    clearInterval(controlsCheckInterval);
+                    resolve();
+                }
+            }
+
+            controlsCheckInterval = setInterval(findControls, 500);
+        });
     }
 
     const controlsButton = $create({ element: 'button', id: 'solve-tango-button', class: 'controls' });
@@ -60,31 +75,76 @@ function initiateSolve() {
     const boardCellWrapper = $('.grid-board > div');
     const cells = $('.grid-board > div > div');
 
+    const simpleEdges = [];
+    cells.forEach(cell => {
+        const queryForEdges = cell.querySelectorAll('.lotka-cell-edge');
+        if (queryForEdges.length) {
+            const cellEdge = {}
+
+            queryForEdges.forEach(edge => {
+                const side = edge.classList.contains('lotka-cell-edge--right') ? 'right' : 'bottom';
+                const type = edge.querySelector('svg').getAttribute('aria-label');
+
+                cellEdge[side] = type;
+            });
+
+            simpleEdges.push(cellEdge);
+        } else {
+            simpleEdges.push(null);
+        }
+    });
+
     const styles = boardCellWrapper.style.cssText.split(';');
     const width = parseInt(styles.find(style => style.includes('rows')).split(':')[1]);
     const height = parseInt(styles.find(style => style.includes('cols')).split(':')[1]);
 
-    // Loop over rows.
-    for (let y = 0; y < height; y++) {
-        const set = [];
+    const simple = convertToSimple(cells);
+    renderArrayAsTableInLogs(simple, width);
+    const finished = [...simple];
+    let previousArray = [];
 
-        for (let x = 0; x < width; x++) {
-            const flatPos = (y * width) + x;
-            set.push(cells[flatPos]);
-        }
+    while (hasNumberArrayChanged(previousArray, finished)) {
+        previousArray = [...finished];
 
-        checkSet(set, width);
-    }
-
-    // Loop over columns.
-    for (let x = 0; x < width; x++) {
-        const set = [];
-
+        // Loop over rows.
         for (let y = 0; y < height; y++) {
-            const flatPos = (y * width) + x;
-            set.push(cells[flatPos]);
+            const set = [];
+            const signs = [];
+
+            for (let x = 0; x < width; x++) {
+                const flatPos = (y * width) + x;
+                set.push(finished[flatPos]);
+                signs.push(simpleEdges[flatPos]?.right);
+            }
+
+            checkSet(set, width, signs);
+
+            for (let x = 0; x < width; x++) {
+                const flatPos = (y * width) + x;
+                finished[flatPos] = set[x];
+            }
         }
 
-        checkSet(set, height);
+        // Loop over columns.
+        for (let x = 0; x < width; x++) {
+            const set = [];
+            const signs = [];
+
+            for (let y = 0; y < height; y++) {
+                const flatPos = (y * width) + x;
+                set.push(finished[flatPos]);
+                signs.push(simpleEdges[flatPos]?.bottom);
+            }
+
+            checkSet(set, width, signs);
+
+            for (let y = 0; y < height; y++) {
+                const flatPos = (y * width) + x;
+                finished[flatPos] = set[y];
+            }
+        }
     }
+
+    renderArrayAsTableInLogs(finished, width);
+    renderSolution(finished, cells);
 }

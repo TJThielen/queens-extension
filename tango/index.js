@@ -7,15 +7,20 @@
  */
 function $(query) {
     // check for iframe.
-    const results = document.querySelectorAll(query);
+    let results = document.querySelectorAll(query);
 
     if (!results.length) {
         // check for iframe ability
         try {
-            return document.querySelector('iframe')?.contentWindow?.document?.body?.querySelectorAll(query);
-        } catch (_e) {
-            return null;
-        }
+            results = document.querySelector('iframe')?.contentWindow?.document?.body?.querySelectorAll(query);
+            if (results.length === 1) {
+                return results[0];
+            } else if (results.length) {
+                return results;
+            }
+        } catch (_e) {}
+
+        return null;
     }
 
     if (results.length === 1) {
@@ -46,18 +51,22 @@ function $create({ element, id, classList }) {
 
 // Ready us up by adding a "Solve" button
 window.onload = systemStart;
-const tangoURL = '/games/tango/';
+const tangoURL = '/games/tango';
 
 async function systemStart() {
     let url = window.location.href;
     let controlsContainer = $('.aux-controls-wrapper');
+    console.log('controls', controlsContainer);
 
     if (!controlsContainer || !url.includes(tangoURL)) {
         await new Promise((resolve) => {
             let controlsCheckInterval = null;
             function findControls() {
                 controlsContainer = $('.aux-controls-wrapper');
+                console.log('controls', controlsContainer);
                 url = window.location.href;
+                console.log('url?', url, url.includes('tango'), url.includes(tangoURL));
+                console.log('wtf', controlsContainer);
 
                 if (controlsContainer && url.includes(tangoURL)) {
                     clearInterval(controlsCheckInterval);

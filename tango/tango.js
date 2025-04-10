@@ -10,7 +10,6 @@
  * @param {({ side: 'right' | 'bottom', type: 'Cross' | 'Equal' } | null)[]} signs 
  */
 function checkSet(set, length, signs) {
-    console.log('check set', set, length, signs);
     checkOnly2(set);
     checkNumberOfTypes(set, length);
     checkCrossEquals(set, signs);
@@ -122,6 +121,15 @@ function checkCrossEquals(set, signs) {
 
         // Check for signs to right and bottom.
         if (!set[setIndex] && !set[setIndex + 1]) {
+            // Check further left and right
+            if (sign === 'Equal' && set[setIndex - 1]) {
+                set[setIndex] = set[setIndex - 1] === 2 ? 1 : 2;
+                set[setIndex + 1] = set[setIndex - 1] === 2 ? 1 : 2;
+            } else if (sign === 'Equal' && set[setIndex + 2]) {
+                set[setIndex] = set[setIndex + 2] === 2 ? 1 : 2;
+                set[setIndex + 1] = set[setIndex + 2] === 2 ? 1 : 2;
+            }
+
             return;
         }
 
@@ -136,8 +144,6 @@ function checkCrossEquals(set, signs) {
         } else {
             set[setIndex] = set[setIndex + 1] === 2 ? 1 : 2;
         }
-
-        console.log(set);
     }
 }
 
@@ -170,7 +176,6 @@ const SunHTML = `<svg width="31" height="31" viewBox="0 0 31 31" fill="none" xml
 function renderSolution(finished, cells) {
     finished.forEach((c, index) => {
         const cell = cells[index];
-        console.log(cell);
 
         // Don't display for locked cells (the starter types).
         if (cell.classList.contains('lotka-cell--locked')) {
@@ -178,7 +183,7 @@ function renderSolution(finished, cells) {
         }
 
         const cellHint = $create({ element: 'div', classList: 'solver-answer-hint' });
-        cellHint.innerHTML = c === 2 ? MoonHTML : SunHTML;
+        cellHint.innerHTML = c === 2 ? MoonHTML : c === 1 ? SunHTML : '0';
         cellHint.style = `
     background: transparent;
     position: absolute;

@@ -130,13 +130,13 @@ function checkCrossEquals(set, signs) {
                 set[setIndex + 1] = set[setIndex + 2] === 2 ? 1 : 2;
             }
 
-            return;
+            continue;
         }
 
         if (sign === 'Equal') {
             set[setIndex] = set[setIndex] || set[setIndex + 1];
             set[setIndex + 1] = set[setIndex] || set[setIndex + 1];
-            return;
+            continue;
         }
 
         if (set[setIndex]) {
@@ -183,7 +183,7 @@ function renderSolution(finished, cells) {
         }
 
         const cellHint = $create({ element: 'div', classList: 'solver-answer-hint' });
-        cellHint.innerHTML = c === 2 ? MoonHTML : c === 1 ? SunHTML : '0';
+        cellHint.innerHTML = c === 2 ? MoonHTML : c === 1 ? SunHTML : '';
         cellHint.style = `
     background: transparent;
     position: absolute;

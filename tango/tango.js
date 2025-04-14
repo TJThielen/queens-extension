@@ -133,7 +133,18 @@ function checkCrossEquals(set, signs) {
             continue;
         }
 
+        // Check for cross row equals.
+        // If we have an equals at the start of the row or the very end of the row, I think this is
+        //  only true for 6 length (TODO, confirm).
+
         if (sign === 'Equal') {
+            // Set far edge to opposite because we must.
+            if (setIndex === 0 && set.length === 6) {
+                set[set.length - 1] = set[setIndex] === 2 ? 1 : set[setIndex] === 1 ? 2 : 0;
+            } else if (setIndex === set.length - 2 && set.length === 6) {
+                set[0] = set[setIndex] === 2 ? 1 : set[setIndex] === 1 ? 2 : 0;
+            }
+
             set[setIndex] = set[setIndex] || set[setIndex + 1];
             set[setIndex + 1] = set[setIndex] || set[setIndex + 1];
             continue;

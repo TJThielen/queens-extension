@@ -130,13 +130,24 @@ function checkCrossEquals(set, signs) {
                 set[setIndex + 1] = set[setIndex + 2] === 2 ? 1 : 2;
             }
 
-            return;
+            continue;
         }
 
+        // Check for cross row equals.
+        // If we have an equals at the start of the row or the very end of the row, I think this is
+        //  only true for 6 length (TODO, confirm).
+
         if (sign === 'Equal') {
+            // Set far edge to opposite because we must.
+            if (setIndex === 0 && set.length === 6) {
+                set[set.length - 1] = set[setIndex] === 2 ? 1 : set[setIndex] === 1 ? 2 : 0;
+            } else if (setIndex === set.length - 2 && set.length === 6) {
+                set[0] = set[setIndex] === 2 ? 1 : set[setIndex] === 1 ? 2 : 0;
+            }
+
             set[setIndex] = set[setIndex] || set[setIndex + 1];
             set[setIndex + 1] = set[setIndex] || set[setIndex + 1];
-            return;
+            continue;
         }
 
         if (set[setIndex]) {
@@ -183,7 +194,7 @@ function renderSolution(finished, cells) {
         }
 
         const cellHint = $create({ element: 'div', classList: 'solver-answer-hint' });
-        cellHint.innerHTML = c === 2 ? MoonHTML : c === 1 ? SunHTML : '0';
+        cellHint.innerHTML = c === 2 ? MoonHTML : c === 1 ? SunHTML : '';
         cellHint.style = `
     background: transparent;
     position: absolute;

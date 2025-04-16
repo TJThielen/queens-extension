@@ -81,6 +81,8 @@ function checkOnly2(set) {
  *  of current types. I.E.
  * - If the length is four and there are 2 Suns, fill the remaining slots with Moons.
  * - If the length is six and there are 3 Moons, fill the remaining slots with Suns.
+ * - If the length is six and there are two of the same types at the start and end of set,
+ *    set the one in from each of those to the opposite.
  *
  * @param {number[]} set The set to check against.
  * @param {number} length The number of types that should be in set.
@@ -104,6 +106,13 @@ function checkNumberOfTypes(set, length) {
         }
 
         return;
+    }
+
+    if (length === 6 && set[0] && set[0] === set[5]) {
+        const oppositeType = set[0] === 2 ? 1 : 2;
+
+        set[1] = oppositeType;
+        set[4] = oppositeType;
     }
 }
 

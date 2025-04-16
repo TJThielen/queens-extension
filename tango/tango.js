@@ -145,6 +145,16 @@ function checkCrossEquals(set, signs) {
                 set[0] = set[setIndex] === 2 ? 1 : set[setIndex] === 1 ? 2 : 0;
             }
 
+            // If there are two equals in a row in a size six, we know they must be opposites.
+            if (set.length === 6 && signs.filter(sign => sign === 'Equal').length === 2) {
+                // Set to opposite of the other equals (if there are values there).
+                const otherSignIndex = signs.findIndex((sign, signIndex) => sign === 'Equal' && signIndex !== setIndex);
+                const otherSign = set[otherSignIndex] || set[otherSignIndex + 1];
+
+                set[setIndex] = otherSign ? otherSign === 2 ? 1 : 2 : 0;
+                set[setIndex + 1] = otherSign ? otherSign === 2 ? 1 : 2 : 0;
+            }
+
             set[setIndex] = set[setIndex] || set[setIndex + 1];
             set[setIndex + 1] = set[setIndex] || set[setIndex + 1];
             continue;

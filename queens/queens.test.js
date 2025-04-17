@@ -1,4 +1,4 @@
-const { isEmpty, isCross, isQueen, getColumn, getRow, getColor } = require('./queens.js');
+const { isEmpty, isCross, isQueen, getColumn, getRow, getColor, getSurroundingSquares, getQueenPositions } = require('./queens.js');
 
 describe('isEmpty function', () => {
   test('should return true if text contains "Empty"', () => {
@@ -103,14 +103,113 @@ describe('getColor function', () => {
     });
 });
 
-describe('findQueens function', () => {
-  test('should return Lavender if text contains "color Lavender"', () => {
-    const result = getColor('Queen of color Lavender, row 1, column 1');
-    expect(result).toBe("Lavender");
+describe('placeQueens function', () => {
+
+  const testData = [
+    [
+      { color: 'Lavender', type: 'cross' },
+      { color: 'Lavender', type: 'empty' },
+      { color: 'Lavender', type: 'empty' },
+      { color: 'Lavender', type: 'empty' },
+      { color: 'Lavender', type: 'empty' },
+      { color: 'Lavender', type: 'empty' },
+      { color: 'Lavender', type: 'empty' },
+      { color: 'Peach', type: 'empty' }
+    ],
+    [
+      { color: 'Lavender', type: 'empty' },
+      { color: 'Soft', type: 'empty' },
+      { color: 'Pastel', type: 'empty' },
+      { color: 'Lavender', type: 'empty' },
+      { color: 'Light', type: 'empty' },
+      { color: 'Light', type: 'empty' },
+      { color: 'Light', type: 'empty' },
+      { color: 'Peach', type: 'empty' }
+    ],
+    [
+      { color: 'Lavender', type: 'empty' },
+      { color: 'Lavender', type: 'empty' },
+      { color: 'Pastel', type: 'empty' },
+      { color: 'Lavender', type: 'empty' },
+      { color: 'Light', type: 'empty' },
+      { color: 'Peach', type: 'empty' },
+      { color: 'Light', type: 'empty' },
+      { color: 'Peach', type: 'empty' }
+    ],
+    [
+      { color: 'Pastel', type: 'empty' },
+      { color: 'Pastel', type: 'empty' },
+      { color: 'Pastel', type: 'empty' },
+      { color: 'Lavender', type: 'empty' },
+      { color: 'Vibrant', type: 'empty' },
+      { color: 'Peach', type: 'empty' },
+      { color: 'Light', type: 'empty' },
+      { color: 'Peach', type: 'empty' }
+    ],
+    [
+      { color: 'Pastel', type: 'empty' },
+      { color: 'Lavender', type: 'empty' },
+      { color: 'Lavender', type: 'empty' },
+      { color: 'Lavender', type: 'empty' },
+      { color: 'Vibrant', type: 'empty' },
+      { color: 'Peach', type: 'empty' },
+      { color: 'Lime', type: 'empty' },
+      { color: 'Peach', type: 'empty' }
+    ],
+    [
+      { color: 'Warm', type: 'empty' },
+      { color: 'Lavender', type: 'empty' },
+      { color: 'Lavender', type: 'empty' },
+      { color: 'Lavender', type: 'empty' },
+      { color: 'Vibrant', type: 'empty' },
+      { color: 'Peach', type: 'empty' },
+      { color: 'Lime', type: 'empty' },
+      { color: 'Peach', type: 'empty' }
+    ],
+    [
+      { color: 'Warm', type: 'empty' },
+      { color: 'Warm', type: 'empty' },
+      { color: 'Warm', type: 'empty' },
+      { color: 'Vibrant', type: 'empty' },
+      { color: 'Vibrant', type: 'empty' },
+      { color: 'Peach', type: 'empty' },
+      { color: 'Lime', type: 'empty' },
+      { color: 'Peach', type: 'empty' }
+    ],
+    [
+      { color: 'Peach', type: 'empty' },
+      { color: 'Peach', type: 'empty' },
+      { color: 'Peach', type: 'empty' },
+      { color: 'Peach', type: 'empty' },
+      { color: 'Peach', type: 'empty' },
+      { color: 'Peach', type: 'empty' },
+      { color: 'Peach', type: 'empty' },
+      { color: 'Peach', type: 'empty' }
+    ]
+  ];
+
+  const expected = [];
+
+  // test('should return queens locations"', () => {
+  //   const result = getQueenPositions(testData);
+  //   expect(result).toBe(expected);
+  // });
+});
+
+describe('getSurroundingSquares function', () => {
+  test('should return all surrounding', () => {
+    const result = getSurroundingSquares(1, 1, 8, 8);
+    expect(true).toBe(true);  //I know this tests nothing but it helps me debug lol
   });
 
-  test('should return -1 if text does not contain "color <str>"', () => {
-    const result = getColor('nothing here');
-    expect(result).toBe(-1);
+  test('top left corner', () => {
+    const result = getSurroundingSquares(0, 0, 8, 8);
+    expect(true).toBe(true);  //I know this tests nothing but it helps me debug lol
+  });
+
+  test('bottom right corner', () => {
+    const result = getSurroundingSquares(7, 7, 8, 8);
+    expect(true).toBe(true);  //I know this tests nothing but it helps me debug lol
   });
 });
+

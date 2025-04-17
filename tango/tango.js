@@ -120,6 +120,25 @@ function checkNumberOfTypes(set, length) {
  * 
  * @param {number[]} set
  * @param {(string | null)[]} signs
+ *
+ * Current cases:
+ * - If there is not any sign:
+ *  - skip
+ * - If there is no types within the sign:
+ *  - If there's an equals sign and a type to the left or right:
+ *    Fill the whole Equals with the opposite type
+ *  - If there's a cross sign and two types somewhere else:
+ *    Fill remaining, non-sign openings
+ *  skip
+ * - If the sign is Equals:
+ *  - If the Equals sign is all the way to one side or the other on a 6-length set:
+ *   - Fill the opposite side opening to the opposite type
+ *  - If there are two equals in a single row:
+ *   - we can fill each fully to the opposite types
+ *  - Set the openings to the same type
+ * - If the sign is a Cross:
+ *   Fill with opposite type
+ * skip
  */
 function checkCrossEquals(set, signs) {
     for (let setIndex = 0; setIndex < set.length; setIndex++) {
@@ -137,6 +156,23 @@ function checkCrossEquals(set, signs) {
             } else if (sign === 'Equal' && set[setIndex + 2]) {
                 set[setIndex] = set[setIndex + 2] === 2 ? 1 : 2;
                 set[setIndex + 1] = set[setIndex + 2] === 2 ? 1 : 2;
+            }
+
+            // Check for length 6 and count of opposite type
+            if (sign === 'Cross' && set.length === 6) {
+                const checkCrossType = numberOfMoons(set) === 2 ? 1 : numberOfSuns(set) === 2 ? 2 : 0;
+                if (checkCrossType) {
+                    // Set any unset positions not part of the cross to Sun.
+                    set.forEach((s, i) => {
+                        if (i === setIndex || i === setIndex + 1) {
+                            return;
+                        }
+
+                        if (!s) {
+                            set[i] = checkCrossType;
+                        }
+                    });
+                }
             }
 
             continue;

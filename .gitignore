@@ -3,3 +3,4 @@ node_modules
 
 # May change this in the future if we want to track coverage in some way.
 tango/coverage/
+tango/tango.main.js

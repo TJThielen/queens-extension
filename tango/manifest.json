@@ -14,8 +14,8 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://www.linkedin.com/games/*"],
-      "js": ["index.js", "tango.js", "t-utils.js"],
+      "matches": ["https://www.linkedin.com/games/tango/*"],
+      "js": ["tango.main.js"],
       "css": ["css/style.css"],
       "run_at": "document_end"
     }

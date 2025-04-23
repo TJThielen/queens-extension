@@ -64,7 +64,6 @@ function initiateSolve() {
     const finished = [...simple];
     let previousArray = [];
 
-    console.log('run');
     while (hasNumberArrayChanged(previousArray, finished)) {
         previousArray = [...finished];
 

@@ -18,21 +18,6 @@ function convertToSimple(cells) {
 };
 
 /**
- * Check if this cell has any type (Sun or Moon).
- *
- * @param {Node | null} cell The cell to check.
- *
- * @returns {boolean}
- */
-function cellHasType(cell) {
-    if (!cell) {
-        return false;
-    }
-
-    return cell.querySelector('#Sun') || cell.querySelector('#Moon');
-}
-
-/**
  * Check if this cell has a sun.
  *
  * @param {Node | null} cell The cell to check.
@@ -60,37 +45,6 @@ function isTypeMoon(cell) {
     }
 
     return !!cell.querySelector('#Moon');
-}
-
-/**
- * Sets the specific cell to the type.
- * This assumes the following:
- * - if a cell is empty, clicking once adds Sun;
- * - if a cell has Sun, clicking once adds Moon;
- * - if a cell has Moon, clicking once makes empty
- * 
- * @param {Node | null} cell The cell to set to.
- * @param {'Sun' | 'Moon'} type The type to convert to.
- */
-function setCell(cell, type) {
-    if (!cell) {
-        return;
-    }
-
-    // Make the cell empty
-    if (isTypeMoon(cell) || isTypeSun(cell)) {
-        cell.click();
-
-        if (isTypeMoon(cell)) {
-            cell.click();
-        }
-    }
-
-
-    cell.click();
-    if (type === 'Moon') {
-        cell.click();
-    }
 }
 
 /**
@@ -223,8 +177,20 @@ const SunHTML = `<svg width="31" height="31" viewBox="0 0 31 31" fill="none" xml
   </g>
 </svg>`;
 
+const hintStyle = `background: transparent;
+    position: absolute;
+    height: 32px;
+    width: 32px;
+    top: 0px;
+    left: 0px;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    padding-left: 2px;
+    padding-top: 2px;`;
+
 /**
- * Appends solution to the grrid.
+ * Appends solution to the grid.
  *
  * @param {number[]} finished Array of solution.
  * @param {Node[]} cells DOM cells to attach solution to.
@@ -240,18 +206,7 @@ function renderSolution(finished, cells) {
 
         const cellHint = $create({ element: 'div', classList: 'solver-answer-hint' });
         cellHint.innerHTML = c === 2 ? MoonHTML : c === 1 ? SunHTML : '';
-        cellHint.style = `
-    background: transparent;
-    position: absolute;
-    height: 32px;
-    width: 32px;
-    top: 0px;
-    left: 0px;
-    display: flex;
-    justify-content: start;
-    align-items: start;
-    padding-left: 2px;
-    padding-top: 2px;`;
+        cellHint.style = hintStyle;
 
         cell.append(cellHint);
     });
@@ -261,7 +216,6 @@ module.exports = {
     $,
     $create,
     convertToSimple,
-    cellHasType,
     numberOfMoons,
     numberOfSuns,
     hasNumberArrayChanged,

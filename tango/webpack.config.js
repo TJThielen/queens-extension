@@ -3,6 +3,6 @@ module.exports = {
   mode: 'production',
   output: {
     filename: 'tango.main.js',
-    path: __dirname,
+    path: __dirname + '/packed',
   },
 };

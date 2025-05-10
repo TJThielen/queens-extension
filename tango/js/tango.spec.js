@@ -127,6 +127,12 @@ describe("checkSet", () => {
                     signs: ['Equal', null, null, null, null],
                 },
                 expected: [2, 0, 0, 0, 2, 1],
+            }, {
+                input: {
+                    set: [1, 0, 0, 0, 0, 0],
+                    signs: [null, null, null, null, 'Equal'],
+                },
+                expected: [1, 0, 0, 0, 2, 0]
             }])('should fill the sign if there is a type to either side of the Equal sign', ({ input, expected }) => {
                 checkCrossEquals(input.set, input.signs);
 

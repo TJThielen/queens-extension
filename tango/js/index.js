@@ -3,6 +3,7 @@ const { $, $create, convertToSimple, hasNumberArrayChanged, renderSolution } = r
 
 // Ready us up by adding a "Solve" button
 window.onload = systemStart;
+window.addEventListener('popstate', systemStart);
 const tangoURL = '/games/tango';
 
 async function systemStart() {
@@ -32,7 +33,32 @@ async function systemStart() {
     controlsContainer.prepend(controlsButton);
 };
 
-function initiateSolve() {
+async function initiateSolve() {
+    const clear = $('#aux-controls-clear');
+    if (clear) {
+        clear.click();
+
+        const clearConfirmSelector = '.artdeco-modal span.artdeco-button__text';
+        let clearConfirm = $(clearConfirmSelector);
+        if (!clearConfirm) {
+            await new Promise((resolve) => {
+                let clearConfirmCheckInterval = null;
+                function findControls() {
+                    clearConfirm = $(clearConfirmSelector);
+
+                    if (clearConfirm) {
+                        clearInterval(clearConfirmCheckInterval);
+                        resolve();
+                    }
+                }
+
+                clearConfirmCheckInterval = setInterval(findControls, 500);
+            });
+        }
+
+        clearConfirm[2]?.click();
+    }
+
     this.remove();
     const boardCellWrapper = $('.grid-board > div');
     const cells = $('.grid-board > div > div');
